@@ -1,6 +1,6 @@
 <% include header.ejs %>
 <style>
-    .friend{
+    .friend {
         position: relative;
         float: left;
         width: 300px;
@@ -8,13 +8,15 @@
         background: #fbfcfe;
         border-right: 1px solid #e9e9e9;
     }
-    .chat{
+
+    .chat {
         position: relative;
         float: left;
         width: calc(100% - 301px);
         height: 100%;
     }
-    .friend-head{
+
+    .friend-head {
         display: block;
         cursor: pointer;
         height: 51px;
@@ -26,32 +28,137 @@
         border-top: 1px solid #e9e9e9;
         border-bottom: 1px solid #e9e9e9;
     }
-    .friend-head-right{
+
+    .friend-head-right {
         float: right;
     }
+
+    .message-agent,.message-client{
+        overflow: auto;
+        margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    .message-container{
+        padding: 0 20px 0 20px;
+        overflow: auto;
+    }
+
+    .message-time-sender{
+        line-height: 1;
+        margin-bottom: 5px;
+        font-size: 12px;
+        color: #adb2bb;
+    }
+
+    .message-agent-time-sender{
+        text-align: right;
+    }
+
+    .message-content{
+        border-radius: 3px;
+        padding: 8px 12px;
+        font-size: 13px;
+        line-height: 22px;
+        word-wrap: break-word;
+        word-break: break-all;
+        border: 1px dashed transparent;
+    }
+
+    .message-agent-content{
+        position: relative;
+        float: right;
+        background-color: #f0f1f3;
+        color: #161e26;
+    }
+    .message-client-content{
+        position: relative;
+        float: left ;
+        background-color: #e7f4ff;
+        color: #161e26;
+    }
+
+    .message-sender{
+        position: absolute;
+        bottom: 0;
+        height: 150px;
+        border-top: 1px solid #e9e9e9;
+        width: 100%;
+
+    }
+
+    .sender-editor{
+        height: 100%;
+    }
+
+    .message-sender textarea{
+        resize: none;
+        border: none;
+        border-radius: 6px;
+        font-size: 15px;
+        color: #161e26;
+        line-height: 22px;
+        background-color: #fff;
+        height: calc(100% - 40px);
+        padding: 20px;
+        width: calc(100% - 40px);
+    }
+
+    .btnMsgSend{
+        z-index: 1;
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+    }
+
+    .user-info{
+        height: 60px;
+        background: #ffffff;
+        line-height: 60px;
+        font-size: 16px;
+        color: #767d85;
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .chat-user{
+        overflow: auto;
+    }
+
+    .user-info img{
+        width: 50px;
+    }
+
+    .user-info .user-avatar{
+        text-align: center;
+    }
+
 </style>
 <div class="layui-fluid">
     <div class="friend">
         <div class="friend-head">
-            <span class="friend-head-right">0 / 2</span>
+            <span class="friend-head-right">0人</span>
             <span class="help-my-chat">我的对话</span>
+        </div>
+        <div class="chat-user">
+
         </div>
     </div>
     <div class="chat">
-        1111
+        <div class="message-container" id="message-container">
+
+        </div>
+        <div class="message-sender">
+            <div class="sender-editor">
+                <textarea placeholder="请输入" id="msg-send-textarea"></textarea>
+                <div class="layui-btn layui-btn-normal btnMsgSend">发送</div>
+            </div>
+        </div>
     </div>
 </div>
-     
-<script src="/layui/layui.js"></script>
-<script>
-  //一般直接写在一个js文件中
-  layui.use(['layer', 'form','jquery'], function(){
-    var layer = layui.layer
-        ,form = layui.form
-        ,$ = layui.jquery;
 
-      $(".admin-index").addClass("layui-this");
-  });
-</script> 
+<script src="/layui/layui.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script type='text/javascript' src='js/common.js' charset='utf-8'></script>
+<script src="/js/server/index.js"> </script>
 
 <% include footer.ejs %>

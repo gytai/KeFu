@@ -6,6 +6,7 @@
 var redis = require('../utils/redis');
 var msgType = require('./messageTpye');
 var ioSvc = require('./ioHelper').ioSvc;
+var AppConfig = require('../config');
 
 //服务端连接
 function ioServer(io) {
@@ -20,6 +21,13 @@ function ioServer(io) {
         }
     });
 
+    Array.prototype.remove = function(val) {
+        var index = this.indexOf(val);
+        if (index > -1) {
+            this.splice(index, 1);
+        }
+    };
+
     io.on('connection', function (socket) {
         console.log('SocketIO有新的连接!');
 
@@ -28,22 +36,76 @@ function ioServer(io) {
         //用户与Socket进行绑定
         socket.on('login', function (uid) {
             console.log(uid+'登录成功');
+
+            //通知用户上线
+            if(uid != AppConfig.KEFUUUID){
+                redis.get(AppConfig.KEFUUUID,function (err,sid) {
+                    if(err){
+                        console.error(err);
+                    }
+                    if(sid){
+                        redis.get('online_count',function (err,val) {
+                            if(err){
+                                console.error(err);
+                            }
+                            if(!val){
+                                val = 0;
+                            }
+                            if(typeof val == 'string'){
+                                val = parseInt(val);
+                            }
+                            var info = {
+                                "uid":uid,
+                                "name":'客户'+val,
+                                "type":'online'
+                            };
+                            io.to(sid).emit('update-users',info);
+                        });
+                    }
+                });
+
+                redis.get('user-uuids',function (err,uuids) {
+                    if(err){
+                        console.error(err);
+                    }
+                    if(uuids){
+                        uuids =JSON.parse(uuids);
+                    }else{
+                        uuids = [];
+                    }
+                    if(uuids.indexOf(uid) == -1){
+                        uuids.push(uid);
+                        uuids = JSON.stringify(uuids);
+                        redis.set('user-uuids',uuids,null,function (err,ret) {
+                            if(err){
+                                console.error(err);
+                            }
+                        });
+                    }
+                });
+
+            }
+
             redis.set(uid,socket.id,null,function (err,ret) {
                 if(err){
                     console.error(err);
                 }
             });
+
             redis.set(socket.id,uid,null,function (err,ret) {
                 if(err){
                     console.error(err);
                 }
             });
+
         });
 
         //断开事件
         socket.on('disconnect', function() {
             console.log("与服务其断开");
+
             _self.updateOnlieCount(false);
+
             redis.get(socket.id,function (err,val) {
                 if(err){
                     console.error(err);
@@ -59,6 +121,43 @@ function ioServer(io) {
                         console.error(err);
                     }
                 });
+                //通知用户下线
+                if(val != AppConfig.KEFUUUID){
+                    redis.get(AppConfig.KEFUUUID,function (err,sid) {
+                        if(err){
+                            console.error(err);
+                        }
+                        if(sid){
+                            var info = {
+                                "uid":val,
+                                "name":'客户下线',
+                                "type":'offline'
+                            };
+                            io.to(sid).emit('update-users',info);
+                        }
+                    });
+
+                    redis.get('user-uuids',function (err,uuids) {
+                        if(err){
+                            console.error(err);
+                        }
+                        if(uuids){
+                            uuids =JSON.parse(uuids);
+                        }else{
+                            uuids = [];
+                        }
+
+                        if(uuids.indexOf(val) != -1){
+                            uuids.remove(val);
+                            uuids = JSON.stringify(uuids);
+                            redis.set('user-uuids',uuids,null,function (err,ret) {
+                                if(err){
+                                    console.error(err);
+                                }
+                            });
+                        }
+                    });
+                }
             });
         });
 
@@ -70,7 +169,11 @@ function ioServer(io) {
         //监听客户端发送的信息,实现消息转发到各个其他客户端
         socket.on('message',function(msg){
             if(msg.type == msgType.messageType.public){
-                socket.broadcast.emit("message",msg.content);
+                var mg = {
+                    "uid" : msg.from_uid  ,
+                    "content": msg.content
+                };
+                socket.broadcast.emit("message",mg);
             }else if(msg.type == msgType.messageType.private){
                 var uid = msg.uid;
                 redis.get(uid,function (err,sid) {
@@ -79,7 +182,11 @@ function ioServer(io) {
                    }
                    if(sid){
                        //给指定的客户端发送消息
-                       io.sockets.socket(sid).emit('message', msg.content);
+                       var mg = {
+                         "uid" : msg.from_uid,
+                         "content": msg.content
+                       };
+                       io.to(sid).emit('message',mg);
                    }
                 });
             }

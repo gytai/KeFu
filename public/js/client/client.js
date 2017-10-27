@@ -1,6 +1,7 @@
 $(function(){
     //Socket.IO 连接
     var socket = io.connect('http://'+document.domain+':9010');
+    var uuid = '';
 
     function insert_client_html(time,content){
         var tpl = '<div class="msg-box">'+
@@ -33,17 +34,36 @@ $(function(){
         $(".msg-container").append(tpl);
     }
 
+    //聊天窗口自动滚到底
+    function scrollToBottom() {
+        var div = document.getElementById('msg-container');
+        div.scrollTop = div.scrollHeight;
+    }
+
 
     $("#btnSend").click(function(){
         var date = dateFormat();
         var msg = $("#textarea").val();
-        insert_client_html(date,msg);  
+        if(msg){
+            var msg_sender = {
+                "type":'private',
+                "uid":'chat-kefu-admin',
+                "content":msg,
+                "from_uid":uuid
+            };
+            socket.emit('message', msg_sender);
+            insert_client_html(date,msg);
+            scrollToBottom();
+            $("#textarea").val('');
+        }
     });
 
     //连接服务器
     socket.on('connect', function () {
-        console.log('连接成功...');
-        var uuid = 'chat'+ guid();
+        //uuid = 'chat'+ guid();
+        var fp1 = new Fingerprint();
+        uuid = fp1.get();
+        console.log('连接成功...'+uuid);
         socket.emit('login', uuid);
     });
 
@@ -54,6 +74,7 @@ $(function(){
     // */
     socket.on('message', function(msg){
         insert_agent_html(dateFormat(),msg.content);
+        scrollToBottom();
     });
 
 });
