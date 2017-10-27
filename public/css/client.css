@@ -1,0 +1,196 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.page-current{
+  background: #ffffff;
+}
+
+.msg-box {
+  margin-bottom: 20px;
+}
+
+.msg-agent,  .msg-bot, .msg-client {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+  padding-left: 50px;
+}
+
+.msg-agent .agent-avatar,.msg-bot .agent-avatar {
+  position: absolute;
+  top: 18px;
+  left: 0;
+}
+
+.msg-client .date {
+  margin-bottom: 2px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #b2b2b2;
+  width: 100%;
+  text-align: right;
+}
+
+ .msg-client .bubble, .msg-client .photo {
+  float: right;
+  width: auto;
+  max-width: 100%;
+  margin-left: 35px;
+}
+
+.msg-agent .bubble, .msg-bot .bubble, .msg-client .bubble {
+  position: relative;
+  padding: 8px 12px;
+  font-size: 13px;
+  line-height: 20px;
+  border-radius: 4px;
+  word-wrap: break-word;
+}
+
+.msg-client .arrow {
+  top: 14px;
+  right: -6px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 6px solid #007aff;
+}
+
+ .msg-agent .arrow,  .msg-agent .arrow-bg, .msg-bot .arrow, .msg-bot .arrow-bg, .msg-client .arrow, .msg-client .arrow-bg {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  font-size: 0;
+}
+
+.msg-client .status {
+  position: absolute;
+  left: -25px;
+  top: 8px;
+}
+
+.msg-agent:after, .msg-bot:after, .msg-client:after, .evaluation-body .evaluation-btn-group:after {
+  display: block;
+  clear: both;
+  content: '';
+}
+
+.msg-client .bubble {
+  background-color: #007aff;
+  color: #fff;
+}
+
+.msg-agent .date,.msg-bot .date {
+  margin-bottom: 2px;
+  font-size: 12px;
+  line-height: 14px;
+  color: #b2b2b2;
+  text-align: left;
+}
+
+.msg-agent .bubble,.msg-bot .bubble {
+  color: #000;
+  background-color: #fff;
+  border-left: 1px solid #f0f0f0;
+}
+
+.msg-agent .agent-avatar, .msg-bot .agent-avatar {
+  position: absolute;
+  top: 18px;
+  left: 0;
+}
+
+.msg-agent .agent-avatar>img,.msg-bot .agent-avatar>img {
+  width: 36px;
+  height: 36px;
+  margin-top: 1px;
+  border-radius: 18px;
+}
+
+.msg-agent .arrow-bg,.msg-bot .arrow-bg {
+  top: 13px;
+  left: -7px;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 7px solid #f0f0f0;
+}
+
+.msg-agent .arrow,.msg-bot .arrow {
+  top: 14px;
+  left: -6px;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 6px solid #fff;
+}
+
+*, :after, :before {
+  box-sizing: border-box;
+  outline: none;
+}
+
+.footer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  box-shadow: 0 -1px 0 0 rgba(0,0,0,.04), 0 -2px 0 0 rgba(0,0,0,.01);
+}
+
+.input-holder {
+  position: relative;
+  height: 50px;
+}
+
+.footer .input-holder .feature-holder {
+  float: left;
+  padding-left: 4px;
+}
+
+.footer .input-holder .text-holder {
+  position: relative;
+  padding-right: 50px;
+  padding-left: 4px;
+  overflow: hidden;
+  zoom: 1;
+}
+
+.footer .input-holder .text-holder #textarea {
+  display: block;
+  width: 100%;
+  height: 32px;
+  padding: 5px;
+  margin-top: 12px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  resize: none;
+  vertical-align: middle;
+  outline: 0;
+  border: 0;
+  word-break: break-all;
+  font-size: 14px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.footer .input-holder .text-holder #btnSend {
+  position: absolute;
+  top: 3px;
+  right: 2px;
+  width: 46px;
+  height: 44px;
+  text-align: center;
+  line-height: 44px;
+  font-size: 14px;
+  color: #858e99;
+}
