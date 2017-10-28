@@ -12,13 +12,13 @@ a {
 }
 
 .msg-box {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .msg-agent,  .msg-bot, .msg-client {
   position: relative;
   width: 100%;
-  margin-bottom: 20px;
   padding-left: 50px;
 }
 
