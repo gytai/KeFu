@@ -27,3 +27,12 @@ pm2 start bin/www --name kefu
 服务端
 
 ![Alt text](https://github.com/gytai/KeFu/blob/master/public/images/server.png)
+
+# 在线实例
+客户端
+
+http://112.74.81.224:9010/admin
+
+客服端：
+
+http://112.74.81.224:9010/admin
