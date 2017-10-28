@@ -64,7 +64,14 @@ $(function(){
         var fp1 = new Fingerprint();
         uuid = fp1.get();
         console.log('连接成功...'+uuid);
-        socket.emit('login', uuid);
+
+        var ip = $("#keleyivisitorip").html();
+        var msg = {
+            "uid" : uuid,
+            "ip" : ip
+        };
+        socket.emit('login', msg);
+
     });
 
     // /* 后端推送来消息时

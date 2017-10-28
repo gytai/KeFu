@@ -7,12 +7,15 @@ var redis = require('../utils/redis');
 var msgType = require('./messageTpye');
 var ioSvc = require('./ioHelper').ioSvc;
 var AppConfig = require('../config');
+var Common = require('../utils/common');
 
 //服务端连接
 function ioServer(io) {
 
     var _self = this;
     ioSvc.setInstance(io);
+
+    var __uuids = [];
 
     //初始化连接人数
     redis.set('online_count',0,null,function (err,ret) {
@@ -34,7 +37,8 @@ function ioServer(io) {
         _self.updateOnlieCount(true);
 
         //用户与Socket进行绑定
-        socket.on('login', function (uid) {
+        socket.on('login', function (msg) {
+            var uid = msg.uid;
             console.log(uid+'登录成功');
 
             //通知用户上线
@@ -54,36 +58,45 @@ function ioServer(io) {
                             if(typeof val == 'string'){
                                 val = parseInt(val);
                             }
-                            var info = {
-                                "uid":uid,
-                                "name":'客户'+val,
-                                "type":'online'
-                            };
-                            io.to(sid).emit('update-users',info);
+
+                            //var ip = socket.request.connection.remoteAddress;
+                            //此处获取IP可能会有延迟，建议改成自己的IP库
+                            Common.getIpLocation(msg.ip,function (err,location) {
+                                var info = {
+                                    "uid":uid,
+                                    "name":location + ' 客户',
+                                    "type":'online'
+                                };
+
+                                redis.get('user-uuids',function (err,uuids) {
+                                    if(err){
+                                        console.error(err);
+                                    }
+                                    if(uuids){
+                                        uuids =JSON.parse(uuids);
+                                    }else{
+                                        uuids = [];
+                                    }
+
+                                    if(__uuids.indexOf(uid) == -1){
+                                        __uuids.push(uid);
+                                        var d_user = {"uid":uid,"name":location + ' 客户'};
+                                        uuids.push(d_user);
+                                        uuids = JSON.stringify(uuids);
+                                        redis.set('user-uuids',uuids,null,function (err,ret) {
+                                            if(err){
+                                                console.error(err);
+                                            }
+                                        });
+                                    }
+                                });
+
+                                io.to(sid).emit('update-users',info);
+                            });
+
                         });
                     }
                 });
-
-                redis.get('user-uuids',function (err,uuids) {
-                    if(err){
-                        console.error(err);
-                    }
-                    if(uuids){
-                        uuids =JSON.parse(uuids);
-                    }else{
-                        uuids = [];
-                    }
-                    if(uuids.indexOf(uid) == -1){
-                        uuids.push(uid);
-                        uuids = JSON.stringify(uuids);
-                        redis.set('user-uuids',uuids,null,function (err,ret) {
-                            if(err){
-                                console.error(err);
-                            }
-                        });
-                    }
-                });
-
             }
 
             redis.set(uid,socket.id,null,function (err,ret) {
@@ -146,9 +159,10 @@ function ioServer(io) {
                         }else{
                             uuids = [];
                         }
-
-                        if(uuids.indexOf(val) != -1){
-                            uuids.remove(val);
+                        var idx = __uuids.indexOf(val);
+                        if( idx != -1){
+                            __uuids.remove(val);
+                            uuids.splice(idx,1);
                             uuids = JSON.stringify(uuids);
                             redis.set('user-uuids',uuids,null,function (err,ret) {
                                 if(err){

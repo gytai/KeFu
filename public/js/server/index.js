@@ -10,14 +10,6 @@ layui.use(['layer', 'form', 'jquery'], function () {
 
     var uuids = [];
 
-    Array.prototype.remove = function(val) {
-        var index = this.indexOf(val);
-        if (index > -1) {
-            this.splice(index, 1);
-        }
-    };
-
-
     //页面初始化函数
     function init() {
         $(".admin-index").addClass("layui-this");
@@ -87,14 +79,14 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 $('.chat-user').html('');
 
                 var data = data.data;
-                var count = 1;
-                data.forEach(function (uid) {
-                    insert_user_html(uid,'客户' + count++);
+
+                data.forEach(function (user) {
+                    insert_user_html(user.uid,user.name);
                     //创建聊天section
-                    insert_section(uid);
+                    insert_section(user.uid);
                 });
                 if(data.length > 0 && !currentUUID){
-                    currentUUID = data[0];
+                    currentUUID = data[0].uid;
                 }
 
                 $(".user-info").css("background","#ffffff");
@@ -125,7 +117,12 @@ layui.use(['layer', 'form', 'jquery'], function () {
     socket.on('connect', function () {
         console.log('连接成功...');
         uuid = 'chat-kefu-admin';
-        socket.emit('login', uuid);
+        var ip = $("#keleyivisitorip").html();
+        var msg = {
+            "uid" : uuid,
+            "ip" : ip
+        };
+        socket.emit('login', msg);
     });
 
     //后端推送来消息时
@@ -138,23 +135,33 @@ layui.use(['layer', 'form', 'jquery'], function () {
     socket.on('update-users', function(msg){
         if(msg.type == 'offline'){
             $("#"+msg.uid).remove();
-            uuids.remove(msg.uid);
+            arrayRemove(uuids,msg.uid);
+            $("#section-" + msg.uid).remove();
+            $(".chat-user").find("#"+msg.uid).remove();
         }else if(msg.type == 'online'){
             if(!currentUUID){
                 currentUUID = msg.uid;
             }
-            if(uuids.indexOf(msg.uid) ==  -1){
+            var index = uuids.indexOf(msg.uid);
+            if( index ==  -1){
                 uuids.push(msg.uid);
-                insert_user_html(msg.uid,msg.name);
+                insert_user_html(msg.uid,msg.name + '#'+ (uuids.length + 1));
                 //创建聊天section
                 insert_section(msg.uid);
+            }else{
+                if($(".chat-user").find("#2316602733").length == 0){
+                    insert_user_html(msg.uid,msg.name + '#'+ (uuids.length + 1));
+                    //创建聊天section
+                    insert_section(msg.uid);
+                }
             }
         }
     });
 
     //更新用户在线数
     socket.on('update_online_count', function(msg){
-       $(".friend-head-right").html( (msg.online_count - 1) + '人' );
+        var count = (msg.online_count - 1) >= 0 ? (msg.online_count - 1) : 0;
+       $(".friend-head-right").html( count + '人' );
     });
 
     //切换用户
