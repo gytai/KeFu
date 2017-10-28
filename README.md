@@ -7,12 +7,19 @@
 
 # 使用方法
 git clone https://github.com/gytai/KeFu.git
+
 cd KeFu
+
 npm install
+
 pm2 start bin/www --name kefu
+
 
 # 实例截图
 客户端
+
 ![Alt text](https://github.com/gytai/KeFu/blob/master/public/images/client.png)
+
 服务端
+
 ![Alt text](https://github.com/gytai/KeFu/blob/master/public/images/server.png)
