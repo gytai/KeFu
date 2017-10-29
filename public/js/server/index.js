@@ -149,7 +149,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 //创建聊天section
                 insert_section(msg.uid);
             }else{
-                if($(".chat-user").find("#2316602733").length == 0){
+                if($(".chat-user").find("#"+msg.uid).length == 0){
                     insert_user_html(msg.uid,msg.name + '#'+ (uuids.length + 1));
                     //创建聊天section
                     insert_section(msg.uid);
