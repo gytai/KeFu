@@ -62,6 +62,9 @@ function ioServer(io) {
                             //var ip = socket.request.connection.remoteAddress;
                             //此处获取IP可能会有延迟，建议改成自己的IP库
                             Common.getIpLocation(msg.ip,function (err,location) {
+                                if(err){
+                                    location = '';
+                                }
                                 var info = {
                                     "uid":uid,
                                     "name":location + ' 客户',

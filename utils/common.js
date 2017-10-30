@@ -18,6 +18,8 @@ function getIpLocation(ip,callback) {
             var json = JSON.parse(html);
             if(json.code == 0){
                 return callback(null,json.data.region + json.data.city);
+            }else{
+                return callback(json.data,null);
             }
 
         });
