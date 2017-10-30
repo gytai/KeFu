@@ -142,6 +142,11 @@ layui.use(['layer', 'form', 'jquery'], function () {
             if(!currentUUID){
                 currentUUID = msg.uid;
             }
+
+            if(currentUUID == uuid){
+                return false;
+            }
+
             var index = uuids.indexOf(msg.uid);
             if( index ==  -1){
                 uuids.push(msg.uid);
