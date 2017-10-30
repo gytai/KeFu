@@ -30,7 +30,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
     }
 
     function insert_section(uid) {
-        var html = '<section class="user-section" id="section-'+ uid +'"></section>';
+        var html = '<section class="user-section" id="section-'+ uid +'" style="display: none;"></section>';
         $(".message-container").append(html);
     }
 
@@ -68,9 +68,21 @@ layui.use(['layer', 'form', 'jquery'], function () {
             '                <div class="layui-col-xs3 user-avatar">\n' +
             '                    <img src="/images/server/mine_fill.png">\n' +
             '                </div>\n' +
-            '                <div class="layui-col-xs9">' + name + '</div>\n' +
+            '                <div class="layui-col-xs9 user-name">' + name + '-' + id + '</div>\n' +
             '            </div>';
         $('.chat-user').append(html);
+    }
+
+    function msg_sender_status(status){
+        if(status){
+            $(".btnMsgSend").removeClass("layui-btn-disabled");
+            $("#msg-send-textarea").removeAttr("disabled");
+            $(".empty-status").hide();
+        }else{
+            $(".btnMsgSend").addClass("layui-btn-disabled");
+            $("#msg-send-textarea").attr("disabled","disabled");
+            $(".empty-status").show();
+        }
     }
 
     function getUsers() {
@@ -138,6 +150,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
             arrayRemove(uuids,msg.uid);
             $("#section-" + msg.uid).remove();
             $(".chat-user").find("#"+msg.uid).remove();
+            msg_sender_status(false);
         }else if(msg.type == 'online'){
             if(!currentUUID){
                 currentUUID = msg.uid;
@@ -177,6 +190,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
         $("#"+uid).css("background","#f2f3f5");
         $(".user-section").hide();
         $("#section-"+uid).show();
+        msg_sender_status(true);
     });
 
 

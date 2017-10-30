@@ -132,6 +132,21 @@
         text-align: center;
     }
 
+    .user-info .user-name{
+        font-size: 12px;
+    }
+
+    .empty-status{
+        width: 150px;
+        margin: 0 auto;
+        text-align: center;
+        margin-top: 200px;
+    }
+
+    .empty-status img{
+        width: 100px;
+    }
+
 </style>
 <div class="layui-fluid">
     <div class="friend">
@@ -145,12 +160,15 @@
     </div>
     <div class="chat">
         <div class="message-container" id="message-container">
-
+            <div class="empty-status">
+                <img src="/images/server/tabpage.png">
+                <div class="text">从左侧列表打开对话</div>
+            </div>
         </div>
         <div class="message-sender">
             <div class="sender-editor">
-                <textarea placeholder="请输入" id="msg-send-textarea"></textarea>
-                <div class="layui-btn layui-btn-normal btnMsgSend">发送</div>
+                <textarea placeholder="请输入" id="msg-send-textarea" disabled></textarea>
+                <div class="layui-btn layui-btn-normal btnMsgSend layui-btn-disabled" >发送</div>
             </div>
         </div>
     </div>

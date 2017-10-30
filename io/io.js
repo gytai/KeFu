@@ -159,11 +159,18 @@ function ioServer(io) {
                         }else{
                             uuids = [];
                         }
+                        val = parseInt(val);
                         var idx = __uuids.indexOf(val);
                         if( idx != -1){
                             __uuids.remove(val);
-                            uuids.splice(idx,1);
-                            uuids = JSON.stringify(uuids);
+                            //uuids.splice(idx,1);
+                            var tmp = [];
+                            uuids.forEach(function (user) {
+                                if(user.uid != val){
+                                    tmp.push(user);
+                                }
+                            });
+                            uuids = JSON.stringify(tmp);
                             redis.set('user-uuids',uuids,null,function (err,ret) {
                                 if(err){
                                     console.error(err);
