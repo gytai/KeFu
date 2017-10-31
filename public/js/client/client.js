@@ -1,9 +1,15 @@
 $(function(){
     //Socket.IO 连接
-    var socket = io.connect('http://'+document.domain+':9010');
+    var socket = io.connect('http://'+document.domain+':9010',{
+        "transports":['websocket', 'polling']
+    });
     var uuid = '';
 
-    function insert_client_html(time,content){
+    function insert_client_html(content,datetime){
+        var time = dateFormat();
+        if(datetime){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(datetime));
+        }
         var tpl = '<div class="msg-box">'+
                     '<div  class="msg-client">'+
                     '<div  class="date">' + time + '</div>'+
@@ -17,7 +23,11 @@ $(function(){
         $(".msg-container").append(tpl);
     }
 
-    function insert_agent_html(time,content){
+    function insert_agent_html(content,datetime){
+        var time = dateFormat();
+        if(datetime){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(datetime));
+        }
         var tpl = '<div class="msg-box">'+
                         '<div class="msg-agent">'+
                         '<div class="agent-avatar">'+
@@ -40,9 +50,25 @@ $(function(){
         div.scrollTop = div.scrollHeight;
     }
 
+    //获取最新的五条数据
+    function get_message(uid) {
+        $.get('/message?uid='+uid,function (data) {
+            if(data.code == 200){
+                data.data.reverse().forEach(function (msg) {
+                    if(msg.from_uid == uid){
+                        insert_client_html(msg.content,msg.time);
+                    }else{
+                        insert_agent_html(msg.content,msg.time);
+                    }
+
+                    scrollToBottom();
+                });
+            }
+        });
+    }
+
 
     $("#btnSend").click(function(){
-        var date = dateFormat();
         var msg = $("#textarea").val();
         if(msg){
             var msg_sender = {
@@ -52,7 +78,7 @@ $(function(){
                 "from_uid":uuid
             };
             socket.emit('message', msg_sender);
-            insert_client_html(date,msg);
+            insert_client_html(msg);
             scrollToBottom();
             $("#textarea").val('');
         }
@@ -71,7 +97,7 @@ $(function(){
             "ip" : ip
         };
         socket.emit('login', msg);
-
+        get_message(uuid);
     });
 
     // /* 后端推送来消息时
@@ -80,8 +106,7 @@ $(function(){
     //         content 消息
     // */
     socket.on('message', function(msg){
-        insert_agent_html(dateFormat(),msg.content);
+        insert_agent_html(msg.content);
         scrollToBottom();
     });
-
 });

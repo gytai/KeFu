@@ -8,6 +8,7 @@ var msgType = require('./messageTpye');
 var ioSvc = require('./ioHelper').ioSvc;
 var AppConfig = require('../config');
 var Common = require('../utils/common');
+var msgModel = require('../model/message');
 
 //服务端连接
 function ioServer(io) {
@@ -192,6 +193,11 @@ function ioServer(io) {
 
         //监听客户端发送的信息,实现消息转发到各个其他客户端
         socket.on('message',function(msg){
+            msgModel.add(msg.from_uid,msg.uid,msg.content,function (err) {
+               if(err){
+                   console.error(err);
+               }
+            });
             if(msg.type == msgType.messageType.public){
                 var mg = {
                     "uid" : msg.from_uid  ,

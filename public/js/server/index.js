@@ -6,7 +6,9 @@ layui.use(['layer', 'form', 'jquery'], function () {
 
     var currentUUID = '';
     var uuid = '';
-    var socket = io.connect('http://'+document.domain+':9010');
+    var socket = io.connect('http://'+document.domain+':9010',{
+        "transports":['websocket', 'polling']
+    });
 
     var uuids = [];
     var online_num = 0;
@@ -33,28 +35,35 @@ layui.use(['layer', 'form', 'jquery'], function () {
     function insert_section(uid) {
         var html = '<section class="user-section"  style="display:none;" id="section-'+ uid +'"></section>';
         $(".message-container").append(html);
+        get_message(uid);
     }
 
-    function insert_agent_html(content){
-        var date = dateFormat();
+    function insert_agent_html(uid,content,datetime){
+        var time = dateFormat();
+        if(datetime){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(datetime));
+        }
         var html = ' <div class="message-agent">\n' +
             '                <div class="message-agent-time-sender message-time-sender">\n' +
-            '                    <span class="message-agent-time">' + date + '</span>\n' +
+            '                    <span class="message-agent-time">' + time + '</span>\n' +
             '                    <span class="">我</span>\n' +
             '                </div>\n' +
             '                <div class="message-agent-content message-content">\n' +
             '                    <div>' + content + '</div>\n' +
             '                </div>\n' +
             '            </div>';
-        $('#section-'+currentUUID).append(html);
+        $('#section-'+uid).append(html);
     }
 
 
-    function insert_client_html(uid,content){
-        var date = dateFormat();
+    function insert_client_html(uid,content,datetime){
+        var time = dateFormat();
+        if(datetime){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(datetime));
+        }
         var html = '<div class="message-client">\n' +
             '                <div class="message-time-sender">\n' +
-            '                    <span class="message-client-time">' + date + '</span>\n' +
+            '                    <span class="message-client-time">' + time + '</span>\n' +
             '                    <span class="">客户</span>\n' +
             '                </div>\n' +
             '                <div class="message-client-content message-content">\n' +
@@ -104,7 +113,8 @@ layui.use(['layer', 'form', 'jquery'], function () {
         $(".friend-head-right").html( online_num + ' / ' + num + ' 人' );
     }
 
-    function getUsers() {
+    //获取在线用户
+    function get_users() {
         $.get('/users',function (data) {
             if(data.code == 200){
                 $('.chat-user').html('');
@@ -131,6 +141,23 @@ layui.use(['layer', 'form', 'jquery'], function () {
         });
     }
 
+    //获取最新的五条数据
+    function get_message(uid) {
+        $.get('/message?uid='+uid,function (data) {
+            if(data.code == 200){
+                data.data.reverse().forEach(function (msg) {
+                    if(msg.from_uid == uid){
+                        insert_client_html(msg.from_uid,msg.content,msg.time);
+                    }else{
+                        insert_agent_html(msg.to_uid,msg.content,msg.time);
+                    }
+
+                    scrollToBottom();
+                });
+            }
+        });
+    }
+
     $(".btnMsgSend").click(function(){
         var msg = $("#msg-send-textarea").val();
         if(msg){
@@ -141,7 +168,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 "from_uid":uuid
             };
             socket.emit('message', msg_sender);
-            insert_agent_html(msg);
+            insert_agent_html(currentUUID,msg);
             scrollToBottom();
             $("#msg-send-textarea").val('');
         }
@@ -221,5 +248,5 @@ layui.use(['layer', 'form', 'jquery'], function () {
     });
 
     init();
-    getUsers();
+    get_users();
 });
