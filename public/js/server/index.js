@@ -9,6 +9,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
     var socket = io.connect('http://'+document.domain+':9010');
 
     var uuids = [];
+    var online_num = 0;
 
     //页面初始化函数
     function init() {
@@ -95,6 +96,14 @@ layui.use(['layer', 'form', 'jquery'], function () {
         }
     }
 
+    function update_online_status() {
+        var num = uuids.length;
+        if(online_num > num){
+            num = online_num;
+        }
+        $(".friend-head-right").html( online_num + ' / ' + num + ' 人' );
+    }
+
     function getUsers() {
         $.get('/users',function (data) {
             if(data.code == 200){
@@ -117,6 +126,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 $(".user-section").hide();
                 msg_sender_status(true);
                 $("#section-"+currentUUID).show();
+                update_online_status();
             }
         });
     }
@@ -161,7 +171,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
         if(msg.type == 'offline'){
             //arrayRemove(uuids,msg.uid);
             $(".chat-user #"+msg.uid+" .user-avatar img").attr("src","/images/server/mine_fill.png");
-            //$("#section-" + msg.uid).remove();
+            $("#section-" + msg.uid).hide();
             //$(".chat-user").find("#"+msg.uid).remove();
             msg_sender_status(false);
         }else if(msg.type == 'online'){
@@ -189,12 +199,13 @@ layui.use(['layer', 'form', 'jquery'], function () {
 
             $(".chat-user #"+msg.uid+" .user-avatar img").attr("src","/images/server/mine_fill_blue.png");
         }
+        update_online_status();
     });
 
     //更新用户在线数
     socket.on('update_online_count', function(msg){
-        var count = (msg.online_count - 1) >= 0 ? (msg.online_count - 1) : 0;
-       $(".friend-head-right").html( count + '人' );
+        online_num = (msg.online_count - 1) >= 0 ? (msg.online_count - 1) : 0;
+        update_online_status();
     });
 
     //切换用户
@@ -208,7 +219,6 @@ layui.use(['layer', 'form', 'jquery'], function () {
         msg_sender_status(true);
         $(".chat-user #"+uid+" .msg-tips").hide();
     });
-
 
     init();
     getUsers();
