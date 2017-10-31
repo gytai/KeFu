@@ -23,6 +23,18 @@ layui.use(['layer', 'form', 'jquery'], function () {
         window.onresize = function(){
             var height = document.body.clientHeight - 262;
             $(".message-container").css("height", height);
+        };
+
+        document.getElementById("msg-send-textarea").onkeydown=function(e){
+            if(e.keyCode == 13 && e.ctrlKey){
+                // 这里实现换行
+                document.getElementById("msg-send-textarea").value += "\n";
+            }else if(e.keyCode == 13){
+                // 避免回车键换行
+                e.preventDefault();
+                // 下面写你的发送消息的代码
+                msg_send();
+            }
         }
     }
 
@@ -113,6 +125,23 @@ layui.use(['layer', 'form', 'jquery'], function () {
         $(".friend-head-right").html( online_num + ' / ' + num + ' 人' );
     }
 
+    //发送消息
+    function msg_send() {
+        var msg = $("#msg-send-textarea").val();
+        if(msg){
+            var msg_sender = {
+                "type":'private',
+                "uid":currentUUID,
+                "content":msg,
+                "from_uid":uuid
+            };
+            socket.emit('message', msg_sender);
+            insert_agent_html(currentUUID,msg);
+            scrollToBottom();
+            $("#msg-send-textarea").val('');
+        }
+    }
+
     //获取在线用户
     function get_users() {
         $.get('/users',function (data) {
@@ -159,19 +188,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
     }
 
     $(".btnMsgSend").click(function(){
-        var msg = $("#msg-send-textarea").val();
-        if(msg){
-            var msg_sender = {
-                "type":'private',
-                "uid":currentUUID,
-                "content":msg,
-                "from_uid":uuid
-            };
-            socket.emit('message', msg_sender);
-            insert_agent_html(currentUUID,msg);
-            scrollToBottom();
-            $("#msg-send-textarea").val('');
-        }
+        msg_send();
     });
 
     //连接服务器
