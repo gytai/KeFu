@@ -30,7 +30,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
     }
 
     function insert_section(uid) {
-        var html = '<section class="user-section" id="section-'+ uid +'" style="display: none;"></section>';
+        var html = '<section class="user-section"  style="display:none;" id="section-'+ uid +'"></section>';
         $(".message-container").append(html);
     }
 
@@ -66,9 +66,10 @@ layui.use(['layer', 'form', 'jquery'], function () {
     function insert_user_html(id,name) {
         var html = '<div class="user-info layui-row" id="' + id + '">\n' +
             '                <div class="layui-col-xs3 user-avatar">\n' +
-            '                    <img src="/images/server/mine_fill.png">\n' +
+            '                    <img src="/images/server/mine_fill_blue.png">\n' +
             '                </div>\n' +
-            '                <div class="layui-col-xs9 user-name">' + name + '-' + id + '</div>\n' +
+            '                <div class="layui-col-xs8 user-name">' + name + '-' + id + '</div>\n' +
+            '                <span class="layui-badge-dot layui-col-xs1 msg-tips"></span>'+
             '            </div>';
         $('.chat-user').append(html);
     }
@@ -85,6 +86,15 @@ layui.use(['layer', 'form', 'jquery'], function () {
         }
     }
 
+    function msg_notification(msg) {
+        $(".chat-user #"+msg.uid+" .msg-tips").show();
+        if(window.Notification && Notification.permission !== "denied") {
+            Notification.requestPermission(function(status) {
+                var n = new Notification('您有新的消息', { body: msg.content });
+            });
+        }
+    }
+
     function getUsers() {
         $.get('/users',function (data) {
             if(data.code == 200){
@@ -93,9 +103,10 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 var data = data.data;
 
                 data.forEach(function (user) {
-                    insert_user_html(user.uid,user.name);
+                    insert_user_html(user.uid,user.name + '#'+ (uuids.length + 1));
                     //创建聊天section
                     insert_section(user.uid);
+                    uuids.push(user.uid);
                 });
                 if(data.length > 0 && !currentUUID){
                     currentUUID = data[0].uid;
@@ -104,6 +115,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 $(".user-info").css("background","#ffffff");
                 $("#"+currentUUID).css("background","#f2f3f5");
                 $(".user-section").hide();
+                msg_sender_status(true);
                 $("#section-"+currentUUID).show();
             }
         });
@@ -141,15 +153,16 @@ layui.use(['layer', 'form', 'jquery'], function () {
     socket.on('message', function(msg){
         insert_client_html(msg.uid,msg.content);
         scrollToBottom();
+        msg_notification(msg);
     });
 
     //后端推送来消息时
     socket.on('update-users', function(msg){
         if(msg.type == 'offline'){
-            $("#"+msg.uid).remove();
-            arrayRemove(uuids,msg.uid);
-            $("#section-" + msg.uid).remove();
-            $(".chat-user").find("#"+msg.uid).remove();
+            //arrayRemove(uuids,msg.uid);
+            $(".chat-user #"+msg.uid+" .user-avatar img").attr("src","/images/server/mine_fill.png");
+            //$("#section-" + msg.uid).remove();
+            //$(".chat-user").find("#"+msg.uid).remove();
             msg_sender_status(false);
         }else if(msg.type == 'online'){
             if(!currentUUID){
@@ -173,6 +186,8 @@ layui.use(['layer', 'form', 'jquery'], function () {
                     insert_section(msg.uid);
                 }
             }
+
+            $(".chat-user #"+msg.uid+" .user-avatar img").attr("src","/images/server/mine_fill_blue.png");
         }
     });
 
@@ -191,6 +206,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
         $(".user-section").hide();
         $("#section-"+uid).show();
         msg_sender_status(true);
+        $(".chat-user #"+uid+" .msg-tips").hide();
     });
 
 
