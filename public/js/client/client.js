@@ -12,7 +12,7 @@ $(function(){
         }
         var tpl = '<div class="msg-box">'+
                     '<div  class="msg-client">'+
-                    '<div  class="date">' + time + '</div>'+
+                    '<div  class="date">' + time + ' 我' + '</div>'+
                     '<div class="bubble rich-text-bubble">'+
                         '<span class="arrow"></span>'+
                         '<div class="text">' + content + '</div>'+
@@ -33,7 +33,7 @@ $(function(){
                         '<div class="agent-avatar">'+
                             '<img src="https://s3-qcloud.meiqia.com/pics.meiqia.bucket/avatars/20170929/972a7c64426ed82da1de67ac3f16bd07.png">'+ 
                         '</div>'+
-                        '<div class="date">' + time + '</div>'+
+                        '<div class="date">' + time + ' 客服' + '</div>'+
                         '<div class="bubble rich-text-bubble">'+
                             '<span class="arrow-bg"></span>'+
                             '<span class="arrow"></span>'+
