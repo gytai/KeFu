@@ -14,9 +14,9 @@ npm install
 pm2 start bin/www --name kefu
 
 # 使用
-1，打开localhost:9010 --客户端
+1，打开localhost:9010/client --客户端
 
-2，打开localhost:9010/admin --服务端
+2，打开localhost:9010 --服务端
 
 # 实例截图
 客户端
@@ -30,8 +30,8 @@ pm2 start bin/www --name kefu
 # 在线实例
 客户端
 
-http://112.74.81.224:9010
+http://112.74.81.224:9010/client
 
 客服端：
 
-http://112.74.81.224:9010/admin
+http://112.74.81.224:9010/
