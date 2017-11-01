@@ -316,12 +316,12 @@ layui.use(['layer', 'form', 'jquery'], function () {
             var index = uuids.indexOf(msg.uid);
             if( index ==  -1){
                 uuids.push(msg.uid);
-                insert_user_html(msg);
+                insert_user_html(msg.uid,msg.name + '#'+ (uuids.length + 1));
                 //创建聊天section
                 insert_section(msg.uid);
             }else{
                 if($(".chat-user").find("#"+msg.uid).length == 0){
-                    insert_user_html(msg);
+                    insert_user_html(msg.uid,msg.name + '#'+ (uuids.length + 1));
                     //创建聊天section
                     insert_section(msg.uid);
                 }
