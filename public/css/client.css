@@ -157,19 +157,21 @@ a {
 }
 
 .footer .input-holder .text-holder {
+  float: left;
+  width: calc(100% - 3rem);
   position: relative;
   padding-right: 50px;
   padding-left: 4px;
   overflow: hidden;
   zoom: 1;
+  height: 100%;
 }
 
 .footer .input-holder .text-holder #textarea {
   display: block;
   width: 100%;
-  height: 32px;
-  padding: 5px;
-  margin-top: 12px;
+  height: 100%;
+  padding: 15px;
   overflow-x: hidden;
   overflow-y: auto;
   resize: none;
@@ -202,4 +204,32 @@ a {
 }
 .content-block {
   margin: 0;
+}
+
+.emoji-image{
+  float: left;
+  width: 3rem;
+  text-align: center;
+  margin-top: 0.85rem;
+}
+
+.emoji-image .icon{
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.msg-client-img{
+    text-align: right;
+}
+
+.msg-client-img img{
+    width: 10rem;
+}
+
+.msg-agent-img{
+    text-align: left;
+}
+
+.msg-agent-img img{
+    width: 10rem;
 }

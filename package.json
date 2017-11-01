@@ -16,6 +16,7 @@
     "socket.io":"~2.0.4",
     "socket.io-client":"^2.0.4",
     "redis":"^2.8.0",
-    "mongoose":"^4.12.5"
+    "mongoose":"^4.12.5",
+    "qiniu":"^7.1.1"
   }
 }

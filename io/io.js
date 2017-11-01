@@ -193,7 +193,7 @@ function ioServer(io) {
 
         //监听客户端发送的信息,实现消息转发到各个其他客户端
         socket.on('message',function(msg){
-            msgModel.add(msg.from_uid,msg.uid,msg.content,function (err) {
+            msgModel.add(msg.from_uid,msg.uid,msg.content,msg.chat_type,msg.image,function (err) {
                if(err){
                    console.error(err);
                }
@@ -201,7 +201,9 @@ function ioServer(io) {
             if(msg.type == msgType.messageType.public){
                 var mg = {
                     "uid" : msg.from_uid  ,
-                    "content": msg.content
+                    "content": msg.content,
+                    "chat_type" :  msg.chat_type?msg.chat_type:'text',
+                    "image":msg.image
                 };
                 socket.broadcast.emit("message",mg);
             }else if(msg.type == msgType.messageType.private){
@@ -214,7 +216,9 @@ function ioServer(io) {
                        //给指定的客户端发送消息
                        var mg = {
                          "uid" : msg.from_uid,
-                         "content": msg.content
+                         "content": msg.content,
+                         "chat_type" :  msg.chat_type?msg.chat_type:'text',
+                         "image":msg.image
                        };
                        io.to(sid).emit('message',mg);
                    }
