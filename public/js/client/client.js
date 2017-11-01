@@ -126,6 +126,14 @@ $(function(){
             chunk_size: '4mb',                  // 分块上传时，每块的体积
             auto_start: true,                   // 选择文件后自动上传，若关闭需要自己绑定事件触发上传
             unique_names: true,
+            filters : {
+                max_file_size : '10mb',
+                prevent_duplicates: true,
+                // Specify what files to browse for
+                mime_types: [
+                    {title : "Image files", extensions : "jpg,gif,png,bmp"}, // 限定jpg,gif,png后缀上传
+                ]
+            },
             init: {
                 'FilesAdded': function(up, files) {
                     plupload.each(files, function(file) {
