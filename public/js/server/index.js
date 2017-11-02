@@ -52,8 +52,8 @@ layui.use(['layer', 'form', 'jquery'], function () {
 
     function insert_agent_html(msg){
         var time = dateFormat();
-        if(msg.datetime){
-            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(msg.datetime));
+        if(msg.time){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(msg.time));
         }
         if(!msg.chat_type){
             msg.chat_type = 'text';
@@ -83,8 +83,8 @@ layui.use(['layer', 'form', 'jquery'], function () {
 
     function insert_client_html(msg){
         var time = dateFormat();
-        if(msg.datetime){
-            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(msg.datetime));
+        if(msg.time){
+            time = dateFormat("yyyy-MM-dd hh:mm:ss",new Date(msg.time));
         }
         if(!msg.chat_type){
             msg.chat_type = 'text';
