@@ -27,23 +27,39 @@
             <div class="content-block msg-container" id="msg-container">
 
             </div>
+
             <footer id="chatFooter" class="footer">
                 <div class="input-holder">
                     <div class="emoji-image docs-icons" id="btn-uploader">
                         <span class="icon icon-emoji emoji-send"></span>
                         <span id="pickfiles" class="icon icon-picture picture-upload"></span>
                     </div>
-
                     <div class="text-holder">
                         <textarea id="textarea" placeholder="请输入"></textarea>
                         <a id="btnSend">发送</a>
                     </div>
                 </div>
             </footer>
+            <div class="emoji-list">
+                <ul>
+                    <li title="笑脸">&#x1F601;</li>
+                    <li title="哭脸">&#x1F602;</li>
+                    <li title="表情1">&#x1F603;</li>
+                    <li title="表情2">&#x1F604;</li>
+                    <li title="表情3">&#x1F605;</li>
+                    <li title="表情4">&#x1F606;</li>
+                    <li title="表情5">&#x1F607;</li>
+                    <li title="表情6">&#x1F608;</li>
+                    <li title="表情7">&#x1F609;</li>
+                    <li title="表情8">&#x1F60A;</li>
+                    <li title="表情9">&#x1F60B;</li>
+                    <li title="表情10">&#x1F60C;</li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
-
+<script src="//twemoji.maxcdn.com/2/twemoji.min.js?2.3.1"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/plupload/2.1.9/moxie.min.js"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/plupload/2.1.9/plupload.min.js"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/qiniu-js-sdk/1.0.14-beta/qiniu.min.js"></script>
@@ -55,7 +71,6 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type='text/javascript' src='js/common.js' charset='utf-8'></script>
 <script type='text/javascript' src='js/client/client.js' charset='utf-8'></script>
-
 </body>
 
 </html>

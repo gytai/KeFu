@@ -35,7 +35,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
                 // 下面写你的发送消息的代码
                 msg_send();
             }
-        }
+        };
     }
 
     //聊天窗口自动滚到底
@@ -153,6 +153,7 @@ layui.use(['layer', 'form', 'jquery'], function () {
     //发送消息
     function msg_send() {
         var msg = $("#msg-send-textarea").val();
+
         if(msg){
             var msg_sender = {
                 "type":'private',
@@ -283,6 +284,16 @@ layui.use(['layer', 'form', 'jquery'], function () {
             }
         });
 
+    });
+
+    $(".emoji-list li").click(function () {
+        var content = $("#msg-send-textarea").val();
+        $("#msg-send-textarea").val(content + " " +$(this).html()+ " " );
+        $(".emoji-list").toggle();
+    });
+
+    $("#emojiBtn").click(function () {
+        $(".emoji-list").toggle();
     });
 
     //连接服务器

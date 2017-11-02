@@ -178,6 +178,16 @@ $(function(){
 
     });
 
+    $(".emoji-list li").click(function () {
+        var content = $("#textarea").val();
+        $("#textarea").val(content + " " +$(this).html()+ " " );
+        $(".emoji-list").toggle();
+    });
+
+    $(".emoji-send").click(function () {
+        $(".emoji-list").toggle();
+    });
+
     //连接服务器
     socket.on('connect', function () {
         //uuid = 'chat'+ guid();
@@ -203,4 +213,6 @@ $(function(){
         insert_agent_html(msg);
         scrollToBottom();
     });
+
+
 });

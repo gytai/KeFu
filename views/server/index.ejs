@@ -1,180 +1,5 @@
 <% include header.ejs %>
-<style>
-    .friend {
-        position: relative;
-        float: left;
-        width: 300px;
-        height: 100%;
-        background: #fbfcfe;
-        border-right: 1px solid #e9e9e9;
-    }
-
-    .chat {
-        position: relative;
-        float: left;
-        width: calc(100% - 301px);
-        height: 100%;
-    }
-
-    .friend-head {
-        display: block;
-        cursor: pointer;
-        height: 51px;
-        padding: 0 12px;
-        font-size: 15px;
-        line-height: 50px;
-        color: #767d85;
-        background-color: #fff;
-        border-top: 1px solid #e9e9e9;
-        border-bottom: 1px solid #e9e9e9;
-    }
-
-    .friend-head-right {
-        float: right;
-    }
-
-    .message-agent,.message-client{
-        overflow: auto;
-        margin-bottom: 10px;
-        margin-top: 10px;
-    }
-
-    .message-container{
-        padding: 0 20px 0 20px;
-        overflow: auto;
-    }
-
-    .message-time-sender{
-        line-height: 1;
-        margin-bottom: 5px;
-        font-size: 12px;
-        color: #adb2bb;
-    }
-
-    .message-agent-time-sender{
-        text-align: right;
-    }
-
-    .message-content{
-        border-radius: 3px;
-        padding: 8px 12px;
-        font-size: 13px;
-        line-height: 22px;
-        word-wrap: break-word;
-        word-break: break-all;
-        border: 1px dashed transparent;
-    }
-
-    .message-agent-content{
-        position: relative;
-        float: right;
-        background-color: #f0f1f3;
-        color: #161e26;
-    }
-    .message-client-content{
-        position: relative;
-        float: left ;
-        background-color: #e7f4ff;
-        color: #161e26;
-    }
-
-    .message-sender{
-        position: absolute;
-        bottom: 0;
-        height: 180px;
-        border-top: 1px solid #e9e9e9;
-        width: 100%;
-
-    }
-
-    .sender-editor{
-        height: calc(100% - 40px);
-    }
-
-    .message-sender textarea{
-        resize: none;
-        border: none;
-        border-radius: 6px;
-        font-size: 15px;
-        color: #161e26;
-        line-height: 22px;
-        background-color: #fff;
-        height: calc(100% - 40px);
-        padding: 20px;
-        width: calc(100% - 40px);
-    }
-
-    .btnMsgSend{
-        z-index: 1;
-        position: absolute;
-        right: 15px;
-        bottom: 15px;
-    }
-
-    .user-info{
-        height: 60px;
-        background: #ffffff;
-        line-height: 60px;
-        font-size: 16px;
-        color: #767d85;
-        border-bottom: 1px solid #e9e9e9;
-    }
-
-    .chat-user{
-        overflow: auto;
-    }
-
-    .user-info img{
-        width: 50px;
-    }
-
-    .user-info .user-avatar{
-        text-align: center;
-    }
-
-    .user-info .user-name{
-        font-size: 12px;
-    }
-
-    .empty-status{
-        width: 150px;
-        margin: 0 auto;
-        text-align: center;
-        margin-top: 200px;
-    }
-
-    .empty-status img{
-        width: 100px;
-    }
-
-    .msg-tips{
-        margin-top: 25px;
-        display: none;
-    }
-
-    .msg-client-img{
-        text-align: left;
-    }
-
-    .msg-client-img img{
-        width: 10rem;
-    }
-
-    .msg-agent-img{
-        text-align: right;
-    }
-
-    .msg-agent-img img{
-        width: 10rem;
-    }
-
-    .message-emoji-picture{
-        height: 40px;
-        line-height: 40px;
-        padding-left: 20px;
-    }
-
-</style>
+<link rel="stylesheet" href="/css/server.css">
 <div class="layui-fluid">
     <div class="friend">
         <div class="friend-head">
@@ -194,7 +19,7 @@
         </div>
         <div class="message-sender">
             <div class="message-emoji-picture" id="btn-uploader">
-                <i class="layui-icon" style="font-size: 25px; color: #969faa;">&#xe60c;</i>
+                <i id="emojiBtn" class="layui-icon" style="font-size: 25px; color: #969faa;">&#xe60c;</i>
                 <i id="pickfiles" class="layui-icon picture-upload" style="font-size: 25px; color: #969faa;margin-left: 10px;">&#xe64a;</i>
             </div>
             <div class="sender-editor">
@@ -202,8 +27,25 @@
                 <div class="layui-btn layui-btn-normal btnMsgSend layui-btn-disabled" title="Enter快捷发送，Ctrl+Enter换行">发送</div>
             </div>
         </div>
+        <div class="emoji-list">
+            <ul>
+                <li title="笑脸">&#x1F601;</li>
+                <li title="哭脸">&#x1F602;</li>
+                <li title="表情1">&#x1F603;</li>
+                <li title="表情2">&#x1F604;</li>
+                <li title="表情3">&#x1F605;</li>
+                <li title="表情4">&#x1F606;</li>
+                <li title="表情5">&#x1F607;</li>
+                <li title="表情6">&#x1F608;</li>
+                <li title="表情7">&#x1F609;</li>
+                <li title="表情8">&#x1F60A;</li>
+                <li title="表情9">&#x1F60B;</li>
+                <li title="表情10">&#x1F60C;</li>
+            </ul>
+        </div>
     </div>
 </div>
+<script type="text/javascript" src="http://tool.keleyi.com/ip/visitoriphost/"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/plupload/2.1.9/moxie.min.js"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/plupload/2.1.9/plupload.min.js"></script>
 <script type="text/javascript" src="http://cdn.staticfile.org/qiniu-js-sdk/1.0.14-beta/qiniu.min.js"></script>
@@ -211,6 +53,5 @@
 <script src="/socket.io/socket.io.js"></script>
 <script type='text/javascript' src='js/common.js' charset='utf-8'></script>
 <script src="/js/server/index.js"> </script>
-<script type="text/javascript" src="http://tool.keleyi.com/ip/visitoriphost/"></script>
 
 <% include footer.ejs %>
